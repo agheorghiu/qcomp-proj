@@ -1,0 +1,111 @@
+### Deutsch's algorithm - Classical
+.code
+
+# generate random value
+CALL __inInt__
+MOV VR_RET VR6
+
+# x starts as 0
+MOV 0 VR0
+
+# y starts as 1
+MOV 1 VR1 
+
+# call f (equivalent to using Uf operator)
+PUSH VR0
+PUSH VR1
+CALL f
+
+POP VR1 # y
+POP VR2 # f(0)
+
+# x is now 1
+MOV 1 VR0 
+
+# call f (equivalent to using Uf operator)
+PUSH VR0
+PUSH VR1
+CALL f
+
+POP VR1 # y
+POP VR0 # f(1)
+
+# f(0) xor f(1)
+XOR VR0 VR2 VR3
+
+JUMPT ct VR6
+
+var:
+MOV string_const_1 VR5
+PUSH VR5
+JUMP print
+
+ct:
+MOV string_const_0 VR5
+PUSH VR5
+
+print:
+CALL __out_string__
+
+# halt execution
+CALL __abort__
+
+# function for which we want to determine if it is balanced or constant
+.function "f", 2, 0
+f:
+        # save IP
+        POP VR0
+        
+        # save y
+        POP VR1
+        
+        # save x
+        POP VR2
+        
+        # check if random is greater than half register size
+        EQ VR6 0 VR3
+        
+        JUMPT constant VR3
+balanced:
+        # CNOT2 y x -> (x xor y) x
+        CNOT2 VR1 VR2
+        JUMP return
+constant:
+        # flip the y qubit
+        X VR1 1
+return:
+        # put x and y back on the stack
+        PUSH VR2
+        PUSH VR1
+
+        #restore IP
+        PUSH VR0
+        
+        # return
+        RET
+.end
+.data
+string_const_1:
+	DW	4
+	DW	13
+	DL	String_dispatch
+	DL	int_const_9
+	DB	"BALANCED\n"
+	DS	1
+
+string_const_0:
+	DW	4
+	DW	13
+	DL	String_dispatch
+	DL	int_const_9
+	DB	"CONSTANT\n"
+	DS	1
+int_const_9:
+	DW	1
+	DW	4
+	DL	Object_dispatch
+	DW	17
+Object_dispatch:
+	DW 10
+String_dispatch:
+	DW 10
