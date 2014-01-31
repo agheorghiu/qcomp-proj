@@ -2,7 +2,7 @@
  * 
  * Main class
  * 
- * @author s1202721
+ * @author Andru, Charlie, Sam
  *
  */
 public class Main {
