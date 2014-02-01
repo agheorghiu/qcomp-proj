@@ -73,11 +73,11 @@ public class QRegister {
 	 * @return	returns binary representation of state
 	 */
 	private String toBinary(int state) {
-		String str = Integer.toBinaryString(state);
+		String str = new StringBuilder(Integer.toBinaryString(state)).reverse().toString();
 		int len = str.length();
 		for (int i = len; i <= numQubits; i++)
 			str += "0";
-		return str; // TODO: reverse this!
+		return str;
 	}
 	
 	/**
@@ -102,13 +102,56 @@ public class QRegister {
 	
 	/**
 	 * 
+	 * Swap bits in binary representation of a number
+	 * 
+	 * @param state	state for which we swap bits
+	 * @param index1	first index to be swapped
+	 * @param index2	second index to be swapped
+	 * @return	returns integer with bits swapped
+	 */
+	private int swapBits(int state, int index1, int index2) {
+		boolean bit1 = (((1 << index1) & state) > 0);
+		boolean bit2 = (((1 << index2) & state) > 0);	
+		int newState = state;
+		if (bit1)
+			newState = newState | (1 << index2);
+		else
+			if (bit2)
+				newState = newState ^ (1 << index2);
+
+		if (bit2)
+			newState = newState | (1 << index1);
+		else
+			if (bit1)
+				newState = newState ^ (1 << index1);
+		return newState;
+	}
+	
+	/**
+	 * 
+	 * Swap qubits in the register (for all states in the superposition)
+	 * 
+	 * @param index1	first index to be swapped
+	 * @param index2	second index to be swapped
+	 */
+	public void swapQubits(int index1, int index2) {
+		HashMap<Integer, Complex> clone = new HashMap<Integer, Complex>(); 
+		for (Integer state : getStates()) {
+			int swapped = swapBits(state, index1, index2);
+			clone.put(swapped, getAmplitude(state));
+		}
+		register = clone;
+	}
+	
+	/**
+	 * 
 	 * Returns string representation of the register
 	 * 
 	 */
 	public String toString() {
 		String str = "";
 		for (Integer key : register.keySet())
-			str += toBinary(key) + "---" + getAmplitude(key) + "\n";
+			str += toBinary(key) + ": " + getAmplitude(key) + "\n";
 		return str;			
 	}
 }

@@ -101,5 +101,35 @@ public class Complex {
 	public static Complex zero() {
 		return new Complex(0, 0);
 	}
+	
+	/**
+	 * 
+	 * Add 2 complex numbers and return the result as a new complex number
+	 * 
+	 * @param c1	first complex number
+	 * @param c2	second complex number
+	 * @return	sum of the two complex numbers
+	 */
+	public static Complex sum(Complex c1, Complex c2) {
+		Complex result = Complex.zero();
+		result.add(c1);
+		result.add(c2);
+		return result;		
+	}
+	
+	/**
+	 * 
+	 * Multiply 2 complex numbers and return the result as a new complex number
+	 * 
+	 * @param c1	first complex number
+	 * @param c2	second complex number
+	 * @return	result of multiplying the 2 complex numbers
+	 */
+	public static Complex multiply(Complex c1, Complex c2) {
+		Complex result = Complex.one();
+		result.mul(c1);
+		result.mul(c2);
+		return result;
+	}
 
 }
