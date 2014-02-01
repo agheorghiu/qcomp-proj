@@ -40,7 +40,7 @@ public class SQOperator extends Operator {
 
 	/**
 	 * 
-	 * 
+	 * Sets the value of the qubit index on which to apply the operator
 	 * 
 	 * @param index
 	 */
