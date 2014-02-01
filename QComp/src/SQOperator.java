@@ -47,18 +47,6 @@ public class SQOperator extends Operator {
 	public void setIndex(int index) {
 		this.index = index;
 	}
-
-	/**
-	 * 
-	 * Applies this operator to the register
-	 * 
-	 */
-	@Override
-	public void apply() {
-		reg.swapQubits(0, index); // swap target qubit with first qubit
-		applyFirst();			  // apply operator to first qubit (which is now the target)
-		reg.swapQubits(0, index); // swap back target and first qubit
-	}
 	
 	/**
 	 * 
@@ -91,4 +79,17 @@ public class SQOperator extends Operator {
 				if(!states.contains(state - 1))
 					changeEven(state - 1);
 	}
+
+	/**
+	 * 
+	 * Applies this operator to the register
+	 * 
+	 */
+	@Override
+	public void apply() {
+		reg.swapQubits(0, index); // swap target qubit with first qubit
+		applyFirst();			  // apply operator to first qubit (which is now the target)
+		reg.swapQubits(0, index); // swap back target and first qubit
+	}
+	
 }

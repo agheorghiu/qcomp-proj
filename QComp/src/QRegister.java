@@ -8,7 +8,7 @@ import java.util.Set;
  * @author Andru, Charlie, Sam
  *
  */
-public class QRegister {
+public class QRegister implements RegisterInterface {
 	
 	/**
 	 * 
