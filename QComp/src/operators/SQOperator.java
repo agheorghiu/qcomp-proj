@@ -1,4 +1,7 @@
+package operators;
 import java.util.Set;
+
+import representation.Complex;
 
 /**
  * 
@@ -50,7 +53,7 @@ public class SQOperator extends Operator {
 	
 	/**
 	 * 
-	 * Change amplitudes for even states
+	 * Change amplitudes for even states. If current state is even, then we update amplitudes for this state and the next one.
 	 * 
 	 * @param state
 	 */

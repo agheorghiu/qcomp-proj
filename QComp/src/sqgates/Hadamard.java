@@ -1,3 +1,7 @@
+package sqgates;
+import operators.SQOperator;
+import representation.Complex;
+
 /**
  * 
  * Hadamard single gate (operator) implementation

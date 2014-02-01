@@ -1,3 +1,7 @@
+package operators;
+import representation.Complex;
+import representation.QRegister;
+
 /**
  * 
  * Abstract operator
