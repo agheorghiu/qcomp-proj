@@ -35,13 +35,13 @@ public class TQOperator extends Operator {
 	 * 
 	 */
 	public TQOperator() {
-		Complex[][] matrix = new Complex[4][4];
+		this.opElems = new Complex[4][4];
 		for (int i = 0; i < 4; i++)
 			for (int j = 0; j < 4; j++)
 				if (i == j)
-					matrix[i][j] = Complex.one();
+					this.opElems[i][j] = Complex.one();
 				else
-					matrix[i][j] = Complex.zero();
+					this.opElems[i][j] = Complex.zero();
 	}
 	
 	/**
@@ -105,12 +105,18 @@ public class TQOperator extends Operator {
 	 * 
 	 */
 	@Override
-	public void apply() {
-		reg.swapQubits(0, control); // swap control qubit with first qubit
-		reg.swapQubits(1, target);  // swap target qubit with second qubit
-		applyFirst();			    // apply operator to first qubit (which is now the target)
-		reg.swapQubits(0, control); // swap back control qubit
-		reg.swapQubits(1, target);  // swap back target qubit
+	public void apply() { // TODO: Double check the logic here!!!
+		reg.swapQubits(0, target);       // swap target qubit with first qubit
+		if (control == 0)                // if control is 0, then we just swapped it with target, so control is now target
+			reg.swapQubits(1, target);
+		else
+			reg.swapQubits(1, control);  // swap control qubit with second qubit
+		applyFirst();			         // apply operator to first qubit (which is now the target)
+		reg.swapQubits(0, target);       // swap back target qubit
+		if (control == 0)                // if control was 0, then control is actually target
+			reg.swapQubits(1, target);
+		else
+			reg.swapQubits(1, control);  // swap back control qubit
 	}
 
 }

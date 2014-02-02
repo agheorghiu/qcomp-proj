@@ -38,7 +38,7 @@ public class QRegister implements RegisterInterface {
 	 * 
 	 */
 	private QRegister() {
-		register.put(0, Complex.one());
+		register.put(1, Complex.one());
 	}
 	
 	/**
