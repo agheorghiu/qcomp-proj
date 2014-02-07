@@ -2,6 +2,7 @@ package operators;
 import java.util.Set;
 
 import representation.Complex;
+import representation.IRegister;
 
 /**
  * 
@@ -25,7 +26,8 @@ public class TQOperator extends Operator {
 	 * 
 	 * @param opElems	the matrix representation
 	 */
-	public TQOperator(Complex[][] opElems) {
+	public TQOperator(IRegister reg, Complex[][] opElems) {
+		super(reg);
 		this.opElems = opElems;
 	}
 	
@@ -34,7 +36,8 @@ public class TQOperator extends Operator {
 	 * Default constructor (identity matrix)
 	 * 
 	 */
-	public TQOperator() {
+	public TQOperator(IRegister reg) {
+		super(reg);
 		this.opElems = new Complex[4][4];
 		for (int i = 0; i < 4; i++)
 			for (int j = 0; j < 4; j++)

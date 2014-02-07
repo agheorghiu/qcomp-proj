@@ -2,6 +2,7 @@ package operators;
 import java.util.Set;
 
 import representation.Complex;
+import representation.IRegister;
 
 /**
  * 
@@ -25,7 +26,8 @@ public class SQOperator extends Operator {
 	 * 
 	 * @param opElems	Matrix representation of the operator (gate)
 	 */
-	public SQOperator(Complex[][] opElems) {
+	public SQOperator(IRegister reg, Complex[][] opElems) {
+		super(reg);
 		this.opElems = opElems;
 	}
 	
@@ -34,7 +36,8 @@ public class SQOperator extends Operator {
 	 * Default constructor (identity matrix representation)
 	 * 
 	 */
-	public SQOperator() {
+	public SQOperator(IRegister reg) {
+		super(reg);
 		Complex[][] matrix = { {Complex.one(), Complex.zero()}, 
 							   {Complex.zero(), Complex.one()}
 							 };

@@ -1,6 +1,6 @@
 package operators;
 import representation.Complex;
-import representation.QRegister;
+import representation.IRegister;
 
 /**
  * 
@@ -16,7 +16,11 @@ public abstract class Operator {
 	 * Quantum register on which operator is acting
 	 * 
 	 */
-	protected QRegister reg = QRegister.getInstance();
+	protected IRegister reg;
+	
+	public Operator(IRegister reg) {
+		this.reg = reg;
+	}
 	
 	/**
 	 * 

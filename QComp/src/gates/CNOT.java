@@ -1,7 +1,8 @@
-package tqgates;
+package gates;
 
 import operators.TQOperator;
 import representation.Complex;
+import representation.IRegister;
 
 /**
  * 
@@ -17,7 +18,8 @@ public class CNOT extends TQOperator {
 	 * Default constructor initialises matrix representation
 	 * 
 	 */
-	public CNOT() {
+	public CNOT(IRegister reg) {
+		super(reg);
 		for (int i = 0; i < 4; i++)
 			for (int j = 0; j < 4; j++)
 				this.opElems[i][j] = Complex.zero();
@@ -25,6 +27,10 @@ public class CNOT extends TQOperator {
 		this.opElems[1][1] = Complex.one();
 		this.opElems[2][3] = Complex.one();
 		this.opElems[3][2] = Complex.one();
+	}
+
+	public String toString() {
+		return "CNOT";
 	}
 
 }

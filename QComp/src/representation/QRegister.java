@@ -1,15 +1,18 @@
 package representation;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
  * 
- * Implementation of quantum register as a singleton class (single global instance of this register)
+ * Implementation of quantum register
  * 
  * @author Andru, Charlie, Sam
  *
  */
-public class QRegister implements RegisterInterface {
+public class QRegister implements IRegister {
 	
 	/**
 	 * 
@@ -27,18 +30,20 @@ public class QRegister implements RegisterInterface {
 	
 	/**
 	 * 
-	 * Singleton instance of register
-	 * 
-	 */
-	private static final QRegister instance = new QRegister();
-	
-	/**
-	 * 
 	 * Default constructor. Initializes to state 0 (|000...0>) with amplitude 1
 	 * 
 	 */
-	private QRegister() {
-		register.put(1, Complex.one());
+	public QRegister() {
+		register.put(0, Complex.one());
+	}
+	
+	/**
+	 * 
+	 * State constructor. Initializes to state binary representation of state
+	 * 
+	 */
+	public QRegister(int state) {
+		register.put(state, Complex.one());
 	}
 	
 	/**
@@ -83,24 +88,17 @@ public class QRegister implements RegisterInterface {
 	
 	/**
 	 * 
-	 * Method for returning the set of states with non-zero amplitudes 
+	 * Method for returning (a copy of) the set of states with non-zero amplitudes 
 	 * 
 	 * @return
 	 */
 	public Set<Integer> getStates() {
-		return register.keySet();
+		Set<Integer> set = new HashSet<Integer>();
+		for (Integer state : register.keySet())
+			set.add(new Integer(state));
+		return set;
 	}
-	
-	/**
-	 * 
-	 * Method which returns the singleton instance of this class
-	 * 
-	 * @return	returns the singular (only) instance of this class
-	 */
-	public static QRegister getInstance() {
-		return instance;
-	}
-	
+		
 	/**
 	 * 
 	 * Swap bits in binary representation of a number
@@ -146,6 +144,35 @@ public class QRegister implements RegisterInterface {
 	
 	/**
 	 * 
+	 * Normalises the states
+	 * 
+	 */
+	@Override
+	public void normalise() {
+		double normaliser = 0.0;
+		for (Integer state : getStates())
+			normaliser += register.get(state).modS();
+		normaliser = Math.sqrt(normaliser);
+		Complex divider = new Complex(1.0 / normaliser, 0);
+		for (Integer state : getStates())
+			register.put(state, Complex.multiply(register.get(state), divider));		
+	}
+	
+	/**
+	 * 
+	 * Sets the amplitude of a set of states to 0 and normalises
+	 * 
+	 * @param states state which we want to nullify
+	 */
+	@Override
+	public void nullifyStates(List<Integer> states) {
+		for (Integer state : states)
+			register.remove(state);
+		normalise();
+	}	
+	
+	/**
+	 * 
 	 * Returns string representation of the register
 	 * 
 	 */
@@ -155,4 +182,25 @@ public class QRegister implements RegisterInterface {
 			str += toBinary(key) + ": " + getAmplitude(key) + "\n";
 		return str;			
 	}
+
+	@Override
+	public List<Integer> getZeroStates(int index) {
+		List<Integer> list = new ArrayList<Integer>();
+		for (Integer state : getStates()) {
+			if ((state & (1 << index)) == 0)
+				list.add(state);
+		}
+		return list;
+	}
+
+	@Override
+	public List<Integer> getOneStates(int index) {
+		List<Integer> list = new ArrayList<Integer>();
+		for (Integer state : getStates()) {
+			if ((state & (1 << index)) != 0)
+				list.add(state);
+		}
+		return list;
+	}
+
 }
