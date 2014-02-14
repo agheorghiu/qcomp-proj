@@ -9,7 +9,7 @@ import java.util.Set;
  * @author Andru, Charlie, Sam
  *
  */
-public interface IRegister { // TODO: change to class? Resolve singleton getInstance method
+public interface IRegister {
 	
 	/**
 	 * 

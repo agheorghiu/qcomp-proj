@@ -11,16 +11,44 @@ import operators.TQOperator;
 import representation.IRegister;
 import representation.QRegister;
 
+/**
+ * 
+ * Implementation of Deutsch's algorithm
+ * 
+ * @author Andru, Charlie, Sam
+ *
+ */
 public class Deutsch implements Algorithm {
 	
+	/**
+	 * 
+	 * Register on which we operate
+	 * 
+	 */
 	private IRegister reg;
+
+	/**
+	 * 
+	 * Factory for making gates
+	 * 
+	 */
 	private OperatorFactory factory;
 	
+	/**
+	 * 
+	 * Constructor for Deutsch's algorithm
+	 * 
+	 */
 	public Deutsch() {
 		reg = new QRegister(1);
 		factory = new OperatorFactory(reg);
 	}
 
+	/**
+	 * 
+	 * Method for running the algorithm
+	 * 
+	 */
 	@Override
 	public void run() {
 		Hadamard h = (Hadamard)factory.makeOperator("Hadamard");
@@ -51,6 +79,12 @@ public class Deutsch implements Algorithm {
 
 	}
 	
+	/**
+	 * 
+	 * Returns randomly either a balanced or a constant operator
+	 * 
+	 * @return	balanced or constant operator function
+	 */
 	private Operator getRandomOperator() {
 		Random gen = new Random();
 		if (gen.nextBoolean()) {
@@ -63,10 +97,22 @@ public class Deutsch implements Algorithm {
 		}
 	}
 	
+	/**
+	 * 
+	 * Returns the balanced operator CNOT
+	 * 
+	 * @return	returns the CNOT gate
+	 */
 	private Operator balancedOperator() {
 		return factory.makeOperator("CNOT");
 	}
 	
+	/**
+	 * 
+	 * Returns the constant unit operator
+	 * 
+	 * @return	returns the unit gate
+	 */
 	private Operator constantOperator() {
 		return new TQOperator(reg);
 	}

@@ -1,5 +1,5 @@
 import algorithms.Algorithm;
-import algorithms.Deutsch;
+import algorithms.DeutschJozsa;
 
 
 /**
@@ -12,8 +12,7 @@ import algorithms.Deutsch;
 public class Main {
 	
 	public static void main(String[] args) {
-		Algorithm deutsch = new Deutsch();
-		deutsch.run();
+		Algorithm deutschJozsa = new DeutschJozsa(5);
+		deutschJozsa.run();
 	}
-
 }
