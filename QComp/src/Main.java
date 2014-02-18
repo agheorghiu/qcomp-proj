@@ -1,5 +1,4 @@
-import algorithms.Algorithm;
-import algorithms.DeutschJozsa;
+import algorithms.Grover;
 
 
 /**
@@ -11,8 +10,9 @@ import algorithms.DeutschJozsa;
  */
 public class Main {
 	
-	public static void main(String[] args) {
-		Algorithm deutschJozsa = new DeutschJozsa(5);
-		deutschJozsa.run();
+	public static void main(String[] args) {	
+		Grover g = new Grover(5, 3);
+		g.run();
+		
 	}
 }

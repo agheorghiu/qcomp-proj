@@ -128,6 +128,16 @@ public class Complex {
 	
 	/**
 	 * 
+	 * Method for negating a complex number
+	 * 
+	 * @return	returns a negated complex number
+	 */
+	public Complex negated() {
+		return new Complex(-this.re, -this.im);
+	}
+	
+	/**
+	 * 
 	 * Prints string representation
 	 * 
 	 */
