@@ -1,4 +1,4 @@
-import algorithms.Grover;
+import algorithms.ArraySearch;
 
 
 /**
@@ -10,9 +10,9 @@ import algorithms.Grover;
  */
 public class Main {
 	
-	public static void main(String[] args) {	
-		Grover g = new Grover(5, 3);
-		g.run();
-		
+	public static void main(String[] args) {
+		int[] v = { 10, 14, 35, 18, 22, 5, 2, 17, 54, 123, 200, 33, 9 };
+		ArraySearch search = new ArraySearch(v, 17);
+		search.run();
 	}
 }

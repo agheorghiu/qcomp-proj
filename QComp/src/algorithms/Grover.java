@@ -11,6 +11,13 @@ import representation.Complex;
 import representation.IRegister;
 import representation.QRegister;
 
+/**
+ * 
+ * Class which defines an implementation of Grover's algorithm
+ * 
+ * @author Andru, Charlie, Sam
+ *
+ */
 public class Grover implements Algorithm {
 	
 	/**
@@ -18,7 +25,7 @@ public class Grover implements Algorithm {
 	 * Register we are using
 	 * 
 	 */
-	private IRegister reg;
+	protected IRegister reg;
 	
 	/**
 	 * 
@@ -54,14 +61,16 @@ public class Grover implements Algorithm {
 		this.rootN = 1 << ((numQubits - 1) / 2 + (numQubits - 1) % 2);
 		this.omega = omega;
 	}
-
+	
 	/**
 	 * 
-	 * Runs the algorithm
+	 * This is the actual implementation of the algorithm, used to search for the state omega.
+	 * It's useful to implement this separate from run function in order to allow multiple calls
+	 * if it doesn't not succeed on the first one (there is a small probability of that happening).
 	 * 
+	 * @return returns value obtained via Grover's algorithm
 	 */
-	@Override
-	public void run() {
+	protected int searchState() {
 		OperatorFactory factory = new OperatorFactory(reg);
 		Hadamard h = (Hadamard)factory.makeOperator("Hadamard");
 		Projector p = new Projector(reg);
@@ -113,13 +122,43 @@ public class Grover implements Algorithm {
 			if (p.apply())
 				computedOmega += (1 << (i - 1));
 		}
-		
-		System.out.println("Computed omega is: " + computedOmega);
+
+		return computedOmega;
 	}
 
 	/**
 	 * 
-	 * Oracle function. Take state |x>|q> -> |x>|q (+) f(x)>, where f(x) is 1 if x is the state we're looking for
+	 * Runs the algorithm
+	 * 
+	 */
+	@Override
+	public void run() {
+		int index = 0, computedOmega = -1;
+		while (computedOmega != omega) {
+			computedOmega = searchState();
+			index++;
+			System.out.println("Computed omega on run " + index + " is: " + computedOmega);
+			if (computedOmega != omega)
+				System.out.println("Trying again!");
+		}
+		System.out.println("Omega has been found!");
+	}
+	
+	/**
+	 * 
+	 * This is the function, f, that will be used in the oracle operator.
+	 * It returns true when the current state is the one we are looking for
+	 * 
+	 * @param state	current state
+	 * @return	true if current state is the one we are looking or, false otherwise
+	 */
+	protected boolean test(int state) {
+		return (state >> 1) == omega;
+	}
+
+	/**
+	 * 
+	 * Oracle operator. Take state |x>|q> -> |x>|q (+) f(x)>, where f(x) is 1 if x is the state we're looking for
 	 * and 0 otherwise. (+) denotes xor operation.
 	 * 
 	 * @return	black box operator that identifies state we are searching for
@@ -130,7 +169,7 @@ public class Grover implements Algorithm {
 			public void apply() {
 				Set<Integer> states = reg.getStates();
 				for (Integer state : states)
-					if ((state >> 1) == omega) {
+					if (test(state)) {
 						Complex aux = reg.getAmplitude(state);
 						reg.setState(state, reg.getAmplitude(state ^ 1));
 						reg.setState(state ^ 1, aux);
