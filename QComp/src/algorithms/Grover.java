@@ -7,30 +7,66 @@ import java.util.Set;
 import operators.Operator;
 import operators.OperatorFactory;
 import operators.Projector;
+import representation.Complex;
 import representation.IRegister;
 import representation.QRegister;
 
 public class Grover implements Algorithm {
 	
+	/**
+	 * 
+	 * Register we are using
+	 * 
+	 */
 	private IRegister reg;
+	
+	/**
+	 * 
+	 * Number of qubits
+	 * 
+	 */
 	private int numQubits;
+	
+	/**
+	 * 
+	 * Square root of N (where N = 2^numQubits)
+	 * 
+	 */
 	private int rootN;
+	
+	/**
+	 * 
+	 * The needle in a haystack. The number/state we are looking for
+	 * 
+	 */
 	private int omega;
 	
+	/**
+	 * 
+	 * Constructor
+	 * 
+	 * @param numQubits	number of qubits
+	 * @param omega	value we are searching for
+	 */
 	public Grover(int numQubits, int omega) {
 		this.reg = new QRegister(1);
 		this.numQubits = numQubits;
-		this.rootN = 1 << (numQubits / 2 + numQubits % 2);
+		this.rootN = 1 << ((numQubits - 1) / 2 + (numQubits - 1) % 2);
 		this.omega = omega;
 	}
 
+	/**
+	 * 
+	 * Runs the algorithm
+	 * 
+	 */
 	@Override
 	public void run() {
 		OperatorFactory factory = new OperatorFactory(reg);
 		Hadamard h = (Hadamard)factory.makeOperator("Hadamard");
 		Projector p = new Projector(reg);
-		Operator function = blackBox(numQubits, omega);
-		Operator diffusion = diffusion(numQubits);
+		Operator oracle = blackBox();
+		Operator diffusion = diffusion();
 		
 		// apply H to all qubits
 		for (int i = 0; i <= numQubits; i++) {
@@ -43,8 +79,8 @@ public class Grover implements Algorithm {
 		System.out.println();
 		
 		for (int i = 0; i < rootN; i++) {
-			// apply the function operator
-			function.apply();
+			// apply the oracle operator
+			oracle.apply();
 
 			System.out.println("Applied blackbox");
 			System.out.println(reg);
@@ -58,7 +94,7 @@ public class Grover implements Algorithm {
 			}
 			
 			diffusion.apply();
-
+			
 			// apply H to qubits 1 - numQubits
 			for (int j = 1; j <= numQubits; j++) {
 				h.setIndex(j);
@@ -68,7 +104,6 @@ public class Grover implements Algorithm {
 			System.out.println("After diffusion");
 			System.out.println(reg);
 			System.out.println();
-
 		}
 		
 		// measure qubits 1 - numQubits and reconstruct omega from binary
@@ -82,14 +117,23 @@ public class Grover implements Algorithm {
 		System.out.println("Computed omega is: " + computedOmega);
 	}
 
-	private Operator blackBox(final int n, final int omega) {
+	/**
+	 * 
+	 * Oracle function. Take state |x>|q> -> |x>|q (+) f(x)>, where f(x) is 1 if x is the state we're looking for
+	 * and 0 otherwise. (+) denotes xor operation.
+	 * 
+	 * @return	black box operator that identifies state we are searching for
+	 */
+	private Operator blackBox() {
 		Operator function = new Operator(reg) {
 			@Override
 			public void apply() {
 				Set<Integer> states = reg.getStates();
 				for (Integer state : states)
-					if (state == omega) {
-						reg.setState(state, reg.getAmplitude(state).negated());
+					if ((state >> 1) == omega) {
+						Complex aux = reg.getAmplitude(state);
+						reg.setState(state, reg.getAmplitude(state ^ 1));
+						reg.setState(state ^ 1, aux);
 						return;
 					}				
 			}
@@ -97,16 +141,22 @@ public class Grover implements Algorithm {
 		return function;
 	}
 	
-	private Operator diffusion(final int n) {
+	/**
+	 * 
+	 * Diffusion operator, leaves 0 state unchanged but negates all the others. Since this is applied
+	 * to all but the first qubit, we are interested in the 0 state for qubits 1-numQubits, so the verification
+	 * is done for (state >> 1).
+	 * 
+	 * @return	returns diffusion operator
+	 */
+	private Operator diffusion() {
 		Operator function = new Operator(reg) {
 			@Override
 			public void apply() {
 				Set<Integer> states = reg.getStates();
 				for (Integer state : states)
-					if (state != 0 && state != 1) {
+					if ((state >> 1) != 0)
 						reg.setState(state, reg.getAmplitude(state).negated());
-						return;
-					}				
 			}
 		};
 		return function;

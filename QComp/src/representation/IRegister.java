@@ -10,7 +10,7 @@ import java.util.Set;
  *
  */
 public interface IRegister {
-	
+
 	/**
 	 * 
 	 * Change amplitude of a certain state
@@ -36,7 +36,7 @@ public interface IRegister {
 	 * @return
 	 */
 	public Set<Integer> getStates();
-	
+
 	/**
 	 * 
 	 * Swap qubits in the register (for all states in the superposition)
@@ -45,7 +45,7 @@ public interface IRegister {
 	 * @param index2	second index to be swapped
 	 */
 	public void swapQubits(int index1, int index2);
-	
+
 	/**
 	 * 
 	 * Returns a list of states which have 0 on position index
@@ -54,7 +54,7 @@ public interface IRegister {
 	 * @return	returns set of states which have 0 on position index
 	 */
 	public List<Integer> getZeroStates(int index);
-	
+
 	/**
 	 * 
 	 * Returns a list of states which have 1 on position index
@@ -63,8 +63,8 @@ public interface IRegister {
 	 * @return	returns set of states which have 1 on position index
 	 */
 	public List<Integer> getOneStates(int index);
-	
-	
+
+
 	/**
 	 * 
 	 * Sets the amplitude of a set of states to 0 and normalises
@@ -72,7 +72,7 @@ public interface IRegister {
 	 * @param states state which we want to nullify
 	 */
 	public void nullifyStates(List<Integer> states);
-	
+
 	/**
 	 * 
 	 * Normalises the amplitudes

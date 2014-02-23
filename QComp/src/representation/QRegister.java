@@ -30,7 +30,7 @@ public class QRegister implements IRegister {
 	
 	/**
 	 * 
-	 * Default constructor. Initializes to state 0 (|000...0>) with amplitude 1
+	 * Default constructor. Initialises to state 0 (|000...0>) with amplitude 1
 	 * 
 	 */
 	public QRegister() {
@@ -38,13 +38,29 @@ public class QRegister implements IRegister {
 	}
 	
 	/**
-	 * 
-	 * State constructor. Initializes to state binary representation of state
-	 * 
-	 */
+         * 
+         * State constructor. Initialises to state binary representation of state
+         * 
+         * @param state state for which the amplitude is to be set to one.
+         */
 	public QRegister(int state) {
 		register.put(state, Complex.one());
 	}
+        
+        /**
+         * 
+         * Clones a QRegister
+         * 
+         * @return clone of this QRegister
+         */
+    @Override
+        public QRegister clone(){
+            QRegister copy = new QRegister();
+            copy.register.remove(0);
+            for (Integer state : register.keySet())
+                copy.setState(state, this.getAmplitude(state));
+            return copy;
+        }
 	
 	/**
 	 * 
@@ -172,17 +188,29 @@ public class QRegister implements IRegister {
 	}	
 	
 	/**
-	 * 
-	 * Returns string representation of the register
-	 * 
-	 */
+         * 
+         * Returns string representation of the register
+         * 
+         * @return String representation of the register in the form [Binary rep. of state] : [Complex amplitude]
+         */
 	public String toString() {
 		String str = "";
 		for (Integer key : register.keySet())
 			str += toBinary(key) + ": " + getAmplitude(key) + "\n";
 		return str;			
 	}
+        
+        public void print(){
+            System.out.println(this.toString()+"\n");
+        }
 
+        /**
+         * 
+         * Returns a List of states for which the index qubit is a 0.
+         * 
+         * @param index qubit which should be in state 0
+         * @return list of states for which the index quibit is 0.
+         */        
 	@Override
 	public List<Integer> getZeroStates(int index) {
 		List<Integer> list = new ArrayList<Integer>();
@@ -193,6 +221,13 @@ public class QRegister implements IRegister {
 		return list;
 	}
 
+        /**
+         * 
+         * Returns a List of states for which the index qubit is a 1.
+         * 
+         * @param index qubit which should be in state 1
+         * @return list of states for which the index quibit is 1.
+         */
 	@Override
 	public List<Integer> getOneStates(int index) {
 		List<Integer> list = new ArrayList<Integer>();
