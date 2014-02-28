@@ -10,7 +10,7 @@ import java.util.*;
  * 
  */
 
-public class ARegister implements IRegister {
+public class ARegister extends IRegister {
 
 	/**
 	 * 

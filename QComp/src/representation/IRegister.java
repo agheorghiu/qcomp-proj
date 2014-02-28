@@ -9,7 +9,7 @@ import java.util.Set;
  * @author Andru, Charlie, Sam
  *
  */
-public interface IRegister {
+public abstract class IRegister { // TODO: make abstract class
 
 	/**
 	 * 
@@ -18,7 +18,7 @@ public interface IRegister {
 	 * @param state	state for which we change the amplitude
 	 * @param amplitude	new amplitude for state
 	 */
-	public void setState(int state, Complex amplitude);
+	public abstract void setState(int state, Complex amplitude);
 
 	/**
 	 * 
@@ -27,7 +27,7 @@ public interface IRegister {
 	 * @param state	state for which we want to find the amplitude
 	 * @return	returns the amplitude of the state
 	 */
-	public Complex getAmplitude(int state);
+	public abstract Complex getAmplitude(int state);
 
 	/**
 	 * 
@@ -35,7 +35,7 @@ public interface IRegister {
 	 * 
 	 * @return
 	 */
-	public Set<Integer> getStates();
+	public abstract Set<Integer> getStates();
 
 	/**
 	 * 
@@ -44,7 +44,7 @@ public interface IRegister {
 	 * @param index1	first index to be swapped
 	 * @param index2	second index to be swapped
 	 */
-	public void swapQubits(int index1, int index2);
+	public abstract void swapQubits(int index1, int index2);
 
 	/**
 	 * 
@@ -53,7 +53,7 @@ public interface IRegister {
 	 * @param index	index of the qubit which we test if it's 0
 	 * @return	returns set of states which have 0 on position index
 	 */
-	public List<Integer> getZeroStates(int index);
+	public abstract List<Integer> getZeroStates(int index);
 
 	/**
 	 * 
@@ -62,7 +62,7 @@ public interface IRegister {
 	 * @param index	index of the qubit which we test if it's 1
 	 * @return	returns set of states which have 1 on position index
 	 */
-	public List<Integer> getOneStates(int index);
+	public abstract List<Integer> getOneStates(int index);
 
 
 	/**
@@ -71,12 +71,23 @@ public interface IRegister {
 	 * 
 	 * @param states state which we want to nullify
 	 */
-	public void nullifyStates(List<Integer> states);
+	public abstract void nullifyStates(List<Integer> states);
 
 	/**
 	 * 
 	 * Normalises the amplitudes
 	 * 
 	 */
-	public void normalise();
+	public abstract void normalise();
+	
+	/**
+	 * 
+	 * Set a specific qubit to either 1 or 0
+	 * 
+	 * @param index	index of the qubit we're trying to set
+	 * @param value	value of this qubit (true = 1, false = 0)
+	 */
+	public void setQubit(int index, boolean value) {
+		// TODO!!!
+	}
 }

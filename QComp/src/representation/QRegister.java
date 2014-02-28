@@ -12,7 +12,7 @@ import java.util.Set;
  * @author Andru, Charlie, Sam
  *
  */
-public class QRegister implements IRegister {
+public class QRegister extends IRegister {
 	
 	/**
 	 * 
