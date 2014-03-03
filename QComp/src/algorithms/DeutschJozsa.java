@@ -2,6 +2,7 @@ package algorithms;
 
 import gates.Hadamard;
 
+
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -11,7 +12,7 @@ import operators.OperatorFactory;
 import operators.Projector;
 import representation.IRegister;
 import representation.QRegister;
-import representation.Tuple;
+import representation.Triplet;
 
 /**
  * 
@@ -85,22 +86,22 @@ public class DeutschJozsa implements Algorithm {
 	
 	/**
 	 * 
-	 * Returns the balanced badass operator
+	 * Returns the balanced operator
 	 * 
-	 * @return	returns the balanced badass operator
+	 * @return	returns the balanced operator
 	 */
 	private Operator balancedOperator() {
-		ArrayList<Tuple<String, Tuple<Integer, Integer>>> tuples =
-			new ArrayList<Tuple<String, Tuple<Integer, Integer>>>();
+		ArrayList<Triplet<String, Integer, Integer>> triplets =
+			new ArrayList<Triplet<String, Integer, Integer>>();
 		
 		// we assume that qubit y is the 0 indexed qubit in our register
 		
 		for (int i = 1; i <= numQubits; i++) {
 			// putting CNOTs together with control i and target 0
-			tuples.add(new Tuple<String, Tuple<Integer, Integer>>("CNOT", new Tuple<Integer, Integer>(i, 0)));
+			triplets.add(new Triplet<String, Integer, Integer>("CNOT", i, 0));
 		}
 		
-		return new NQOperator(reg, tuples);
+		return new NQOperator(reg, triplets);
 	}
 	
 	/**

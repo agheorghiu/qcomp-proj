@@ -9,15 +9,7 @@ import java.util.*;
  * @author Andru, Charlie, Sam
  * 
  */
-
 public class ARegister extends IRegister {
-
-	/**
-	 * 
-	 * Number of qubits to be used
-	 * 
-	 */
-	private final int numQubits;
 
 	/**
 	 * 
@@ -28,7 +20,7 @@ public class ARegister extends IRegister {
 
 	/**
 	 * 
-	 * Default constructor. Initialises to state 0 (|000...0>) with amplitude 1
+	 * Initialises to state 0 (|000...0>) with amplitude 1
 	 * 
 	 * @param numQubits
 	 *            Number of qubits in the register
@@ -42,6 +34,15 @@ public class ARegister extends IRegister {
 			reg[i] = Complex.zero();
 	}
 
+	/**
+	 * 
+	 * Default constructor. Initialises to state 0 (|000...0>) with amplitude 1
+	 * 
+	*/
+	public ARegister() {
+		this(32);
+	}	
+		
 	/**
 	 * 
 	 * Constuctor for array-based register
@@ -60,7 +61,7 @@ public class ARegister extends IRegister {
 
 	@Override
 	public IRegister clone() {
-		ARegister copy = new ARegister(this.numQubits);
+		ARegister copy = new ARegister(numQubits);
 		for (int i = 0; i < reg.length; i++)
 			copy.setState(i, reg[i]);
 		return copy;
@@ -81,36 +82,8 @@ public class ARegister extends IRegister {
 		Set<Integer> set = new HashSet<Integer>();
 		for (int i = 0; i < numQubits; i++)
 			if (!reg[i].equals(Complex.zero()))
-				set.add(new Integer(i));
+				set.add(i);
 		return set;
-	}
-
-	/**
-	 * 
-	 * Swap bits in binary representation of a number
-	 * 
-	 * @param state
-	 *            state for which we swap bits
-	 * @param index1
-	 *            first index to be swapped
-	 * @param index2
-	 *            second index to be swapped
-	 * @return returns integer with bits swapped
-	 */
-	private int swapBits(int state, int index1, int index2) {
-		boolean bit1 = (((1 << index1) & state) > 0);
-		boolean bit2 = (((1 << index2) & state) > 0);
-		int newState = state;
-		if (bit1)
-			newState = newState | (1 << index2);
-		else if (bit2)
-			newState = newState ^ (1 << index2);
-
-		if (bit2)
-			newState = newState | (1 << index1);
-		else if (bit1)
-			newState = newState ^ (1 << index1);
-		return newState;
 	}
 
 	@Override
@@ -122,77 +95,10 @@ public class ARegister extends IRegister {
 		}
 		reg = clone;
 	}
-
+	
 	@Override
-	public List<Integer> getZeroStates(int index) {
-		List<Integer> list = new ArrayList<Integer>();
-		for (Integer state : getStates()) {
-			if ((state & (1 << index)) == 0)
-				list.add(state);
-		}
-		return list;
+	protected void removeState(int state) {
+		reg[state] = Complex.zero();
 	}
 
-	@Override
-	public List<Integer> getOneStates(int index) {
-		List<Integer> list = new ArrayList<Integer>();
-		for (Integer state : getStates()) {
-			if ((state & (1 << index)) != 0)
-				list.add(state);
-		}
-		return list;
-	}
-
-	@Override
-	public void nullifyStates(List<Integer> states) {
-		for (Integer state : states)
-			reg[state] = Complex.zero();
-		normalise();
-	}
-
-	@Override
-	public void normalise() {
-		double normaliser = 0.0;
-		for (int state = 0; state < reg.length; state++)
-			normaliser += reg[state].modS();
-		normaliser = Math.sqrt(normaliser);
-		if (normaliser == 0)
-			return;
-		Complex divider = new Complex(1.0 / normaliser, 0);
-		for (int state = 0; state < reg.length; state++)
-			reg[state] = Complex.multiply(reg[state], divider);
-	}
-
-	/**
-	 * 
-	 * Returns binary representation of a given state
-	 * 
-	 * @param state
-	 *            state for which we want to output binary representation
-	 * @return returns binary representation of state
-	 */
-	private String toBinary(int state) {
-		String str = new StringBuilder(Integer.toBinaryString(state)).reverse().toString();
-		int len = str.length();
-		for (int i = len; i <= numQubits; i++)
-			str += "0";
-		return str;
-	}
-
-	/**
-	 * 
-	 * Returns string representation of the register
-	 * 
-	 */
-	public String toString() {
-		String str = "";
-		for (int state = 0; state < reg.length; state++)
-			if (!reg[state].equals(Complex.zero()))
-				str += toBinary(state) + ": " + getAmplitude(state) + "\n";
-		return str;
-	}
-
-	public void print() {
-		System.out.println(this.toString() + "\n");
-	}
 }

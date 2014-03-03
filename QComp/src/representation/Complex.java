@@ -27,10 +27,6 @@ public class Complex {
 		this.im = im;
 	}
 	
-	public Complex clone(){
-		return new Complex(this.re, this.im);
-	}
-	
 	/**
 	 * 
 	 * Creates the complex number 1
@@ -135,18 +131,29 @@ public class Complex {
 	public Complex negated() {
 		return new Complex(-this.re, -this.im);
 	}
+
+	@Override
+	public Complex clone(){
+		return new Complex(this.re, this.im);
+	}	
 	
-	/**
-	 * 
-	 * Prints string representation
-	 * 
-	 */
+	@Override
 	public String toString() {
 		String str = "";
 		str += re + " " + im + "i \n";
 		return str;
 	}
 	
+	@Override
+	public boolean equals(Object o) {
+		try {
+			Complex c = (Complex)o;
+			return equals(c);
+		} catch (Exception e) {
+			return false;
+		}
+	}
+
 	public boolean equals(Complex c){
 		if (this.re == c.re && this.im == c.im)
 			return true;

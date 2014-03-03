@@ -1,5 +1,6 @@
-import algorithms.ArraySearch;
-import algorithms.QuantumAdder;
+import operators.OperatorFactory;
+import operators.SQOperator;
+import representation.QRegister;
 
 
 /**
@@ -17,8 +18,15 @@ public class Main {
 		ArraySearch search = new ArraySearch(v, 17);
 		search.run();
 		*/
-		
+
+		/*
+		DeutschJozsa dj = new DeutschJozsa(10);
+		dj.run();
+		*/
+
+		/*
 		QuantumAdder adder = new QuantumAdder(10, 25, 5);
 		adder.run();
+		*/
 	}
 }

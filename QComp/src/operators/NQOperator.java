@@ -1,10 +1,11 @@
 package operators;
 
 import java.util.ArrayList;
+
 import java.util.List;
 
 import representation.IRegister;
-import representation.Tuple;
+import representation.Triplet;
 
 /**
  * 
@@ -17,10 +18,10 @@ public class NQOperator extends Operator {
 	
 	/**
 	 * 
-	 * List of tuples specifying gate and the indices on which we apply it
+	 * List of triplets specifying gate and the indices on which we apply it
 	 * 
 	 */
-	private List<Tuple<String, Tuple<Integer, Integer>>> tuples;
+	private List<Triplet<String, Integer, Integer>> triplets;
 	
 	/**
 	 * 
@@ -34,11 +35,11 @@ public class NQOperator extends Operator {
 	 * Constructor
 	 * 
 	 * @param reg	register on which we're operating
-	 * @param tuples	list of tuples
+	 * @param triplets	list of triplets
 	 */
-	public NQOperator(IRegister reg, List<Tuple<String, Tuple<Integer, Integer>>> tuples) {
+	public NQOperator(IRegister reg, List<Triplet<String, Integer, Integer>> triplets) {
 		super(reg);
-		this.tuples = tuples;
+		this.triplets = triplets;
 		this.factory = new OperatorFactory(reg);
 	}
 	
@@ -51,7 +52,7 @@ public class NQOperator extends Operator {
 	 */
 	public NQOperator(IRegister reg, int numQubits) {
 		super(reg);
-		this.tuples = new ArrayList<Tuple<String, Tuple<Integer, Integer>>>();
+		this.triplets = new ArrayList<Triplet<String, Integer, Integer>>();
 	}
 
 	/**
@@ -61,12 +62,12 @@ public class NQOperator extends Operator {
 	 */
 	@Override
 	public void apply() {
-		for (Tuple<String, Tuple<Integer, Integer>> tuple : tuples) {
-			Operator gate = factory.makeOperator(tuple.fst());	
+		for (Triplet<String, Integer, Integer> triplet : triplets) {
+			Operator gate = factory.makeOperator(triplet.fst());	
 			if (gate instanceof SQOperator)
-				((SQOperator)gate).setIndex(tuple.snd().fst());
+				((SQOperator)gate).setIndex(triplet.snd());
 			else
-				((TQOperator)gate).setIndices(tuple.snd().fst(), tuple.snd().snd());
+				((TQOperator)gate).setIndices(triplet.snd(), triplet.trd());
 			gate.apply();
 		}
 	}
