@@ -1,8 +1,9 @@
 
 import java.util.Random;
 
-import representation.Complex;
-import representation.IRegister;
+import representation.*;
+import operators.*;
+import gates.*;
 
 /**
  *
@@ -21,9 +22,8 @@ public class RegisterComparison {
      * @param hreg the QRegister object
      * @param type how the registers are to be filled- 0: first nStates*density states will be filled; 1: nStates*density regularily spaced states will be filled; 2: nStates*density random states will be filled
      */
-    private static void fillMasterRegs(int nQubits, double density, IRegister areg, IRegister hreg, int type){
+    private static void fillMasterRegs(int nQubits, double density, IRegister areg, IRegister hreg){
         
-        //find nicer way to do this!
         areg.nullifyStates(areg.getOneStates(0));
         areg.nullifyStates(areg.getZeroStates(0));
                         
@@ -33,48 +33,26 @@ public class RegisterComparison {
         int nStates = 1 << nQubits;
         int fill = (int)((double)(nStates)*density);
         
-        if (type == 0){ //fill the first fill states with equal amplitudes
-            for (int i=0; i < fill; i++){
-                areg.setState(i, Complex.one());
-                hreg.setState(i, Complex.one());
-            }
-            areg.normalise();
-            hreg.normalise();
-        }
+        boolean alreadyPicked[] = new boolean[nStates];
+                    
+        Random rand = new Random();
         
-        else if (type == 1){ //fill regularily spaced states with equal amplitudes
-            if (fill == 0) return;
-            int spacing = nStates/fill;
-            int i=0;
-            while (i < nStates){
-                areg.setState(i, Complex.one());
-                hreg.setState(i, Complex.one());
-                i += spacing;
-            }
-            areg.normalise();
+        for (int i=0; i<fill; i++){
+            int place = 0;
+            do
+                place = rand.nextInt(nStates);                    
+            while (alreadyPicked[place]);
+            alreadyPicked[place] = true;
+            areg.setState(place, Complex.one()); 
+            hreg.setState(place, Complex.one());
         }
+        hreg.normalise();       
+        areg.normalise();
         
-        else if (type == 2){ //fill random states with equal amplitudes
-            boolean alreadyPicked[] = new boolean[nStates];
-                        
-            Random rand = new Random();
-            
-            for (int i=0; i<fill; i++){
-                int place = 0;
-                do
-                    place = rand.nextInt(nStates);                    
-                while (alreadyPicked[place]);
-                alreadyPicked[place] = true;
-                areg.setState(place, Complex.one()); 
-                hreg.setState(place, Complex.one());
-            }
-            hreg.normalise();       
-            areg.normalise();
-        }
                             
     }
     
-/*    
+   
     public static void main(String[] args) {        
          
         int maxQ = 10;
@@ -92,7 +70,7 @@ public class RegisterComparison {
                     ARegister areg = new ARegister(nQ);
                     QRegister hreg = new QRegister();
 
-                    fillMasterRegs(nQ, (0.01*(double)d), areg, hreg, 2);
+                    fillMasterRegs(nQ, (0.01*(double)d), areg, hreg);
 
                     for (int i = 0; i < rep; i++){
 
@@ -140,7 +118,8 @@ public class RegisterComparison {
                 }
             }
         }//finish calculating average times        
-               
+        
+        /*     
         for (int i=0; i<maxQ; i++){
             
             Plot plot = new Plot();
@@ -166,6 +145,8 @@ public class RegisterComparison {
         Switch.setXLabel("Number of Qubits");
         Switch.setYLabel("Percentage");
         
+        */
+        
         for (int i=0; i<maxQ; i++){
             System.out.println("\n\n ............... \n\n"+(i+1)+" Qubits:\n\n");
             System.out.println("\n ------Array Implementation------\n");
@@ -176,5 +157,4 @@ public class RegisterComparison {
                 System.out.println(AvTime[1][i][k]);
         }
     }
-*/
 }

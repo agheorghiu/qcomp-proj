@@ -52,7 +52,7 @@ public class ARegister extends IRegister {
 	 */
 	public ARegister(int numQ, int state) {
 		numQubits = numQ;
-		reg = new Complex[numQubits];
+		reg = new Complex[(1 << numQubits)];
 		reg[state] = Complex.one();
 		for (int i = 0; i < reg.length; i++)
 			if (!(i == state))

@@ -81,7 +81,7 @@ public class TQOperator extends Operator {
 	
 	/**
 	 * 
-	 * Apply the operator on the first 2 qubits (qubit 0 is control and qubit 1 is target)
+	 * Apply the operator on the first 2 qubits (qubit 1 is control and qubit 0 is target)
 	 * 
 	 */
 	public void applyFirst() {
@@ -109,7 +109,63 @@ public class TQOperator extends Operator {
 	 */
 	@Override
 	public void apply() { // TODO: Double check the logic here!!!
-		reg.swapQubits(0, target);       // swap target qubit with first qubit
+		if (control > 1 && target > 1) {
+			reg.swapQubits(1, control);
+			reg.swapQubits(0, target);
+			applyFirst();
+			reg.swapQubits(1, control);
+			reg.swapQubits(0, target);
+		} else
+		if (control == 1 && target == 0) {
+			applyFirst();
+		} else
+		if (control == 0 && target == 1) {
+			reg.swapQubits(0, 1);
+			applyFirst();
+			reg.swapQubits(0, 1);
+		} else
+		if (control == 1 && target > 1) {
+			reg.swapQubits(0, target);
+			applyFirst();
+			reg.swapQubits(0, target);
+		} else
+		if (control > 1 && target == 0) {
+			reg.swapQubits(1, control);
+			applyFirst();
+			reg.swapQubits(1, control);			
+		}
+		
+		/*
+		if (control > 1 && target > 1) {
+			reg.swapQubits(0, control);
+			reg.swapQubits(1, target);
+			applyFirst();
+			reg.swapQubits(0, control);
+			reg.swapQubits(1, target);
+		} else
+		if (control == 0 && target == 1) {
+			applyFirst();
+		} else
+		if (control == 1 && target == 0) {
+			reg.swapQubits(0, 1);
+			applyFirst();
+			reg.swapQubits(0, 1);
+		} else
+		if (control == 0 && target > 1) {
+			reg.swapQubits(1, target);
+			applyFirst();
+			reg.swapQubits(1, target);
+		} else
+		if (control > 1 && target == 1) {
+			reg.swapQubits(0, control);
+			applyFirst();
+			reg.swapQubits(0, control);			
+		}
+		*/
+		
+		
+		/*
+		reg.swapQubits(1, target);       // swap target qubit with first qubit
 		if (control == 0)                // if control is 0, then we just swapped it with target, so control is now target
 			reg.swapQubits(1, target);
 		else
@@ -120,6 +176,7 @@ public class TQOperator extends Operator {
 			reg.swapQubits(1, target);
 		else
 			reg.swapQubits(1, control);  // swap back control qubit
+		*/
 	}
 
 }
