@@ -21,15 +21,15 @@ public class NQOperator extends Operator {
 	 * List of triplets specifying gate and the indices on which we apply it
 	 * 
 	 */
-	private List<Triplet<String, Integer, Integer>> triplets;
+	protected List<Triplet<String, Integer, Integer>> triplets;
 	
 	/**
 	 * 
 	 * Factory for making gates
 	 * 
 	 */
-	private OperatorFactory factory;
-
+	protected OperatorFactory factory;
+	
 	/**
 	 * 
 	 * Constructor

@@ -1,4 +1,5 @@
 package operators;
+
 import java.util.Set;
 
 import representation.Complex;
@@ -9,28 +10,29 @@ import representation.IRegister;
  * Two qubit operator
  * 
  * @author Andru, Charlie, Sam
- *
+ * 
  */
 public class TQOperator extends Operator {
-	
+
 	/**
 	 * 
 	 * Indices for control qubit and target qubit
 	 * 
 	 */
 	private int control, target;
-	
+
 	/**
 	 * 
 	 * Constructor which receives matrix representation
 	 * 
-	 * @param opElems	the matrix representation
+	 * @param opElems
+	 *            the matrix representation
 	 */
 	public TQOperator(IRegister reg, Complex[][] opElems) {
 		super(reg);
 		this.opElems = opElems;
 	}
-	
+
 	/**
 	 * 
 	 * Default constructor (identity matrix)
@@ -46,13 +48,15 @@ public class TQOperator extends Operator {
 				else
 					this.opElems[i][j] = Complex.zero();
 	}
-	
+
 	/**
 	 * 
 	 * Sets the control and target indices
 	 * 
-	 * @param control	control index
-	 * @param target	target index
+	 * @param control
+	 *            control index
+	 * @param target
+	 *            target index
 	 */
 	public void setIndices(int control, int target) {
 		this.control = control;
@@ -61,7 +65,8 @@ public class TQOperator extends Operator {
 
 	/**
 	 * 
-	 * Change amplitudes for 4k states. If current state is a multiple of 4, then we update amplitudes for this state and the next 3 ones.
+	 * Change amplitudes for 4k states. If current state is a multiple of 4,
+	 * then we update amplitudes for this state and the next 3 ones.
 	 * 
 	 * @param state
 	 */
@@ -73,15 +78,17 @@ public class TQOperator extends Operator {
 		for (int i = 0; i < 4; i++) {
 			newAmplitudes[i] = Complex.zero();
 			for (int j = 0; j < 4; j++)
-				newAmplitudes[i].add(Complex.multiply(opElems[i][j], oldAmplitudes[j]));
+				newAmplitudes[i].add(Complex.multiply(opElems[i][j],
+						oldAmplitudes[j]));
 		}
 		for (int i = 0; i < 4; i++)
 			reg.setState(state + i, newAmplitudes[i]);
 	}
-	
+
 	/**
 	 * 
-	 * Apply the operator on the first 2 qubits (qubit 1 is control and qubit 0 is target)
+	 * Apply the operator on the first 2 qubits (qubit 1 is control and qubit 0
+	 * is target)
 	 * 
 	 */
 	public void applyFirst() {
@@ -97,7 +104,7 @@ public class TQOperator extends Operator {
 						isDone = true;
 						break;
 					}
-				if(!isDone)
+				if (!isDone)
 					change4k(state - rem);
 			}
 	}
@@ -108,75 +115,40 @@ public class TQOperator extends Operator {
 	 * 
 	 */
 	@Override
-	public void apply() { // TODO: Double check the logic here!!!
-		if (control > 1 && target > 1) {
-			reg.swapQubits(1, control);
-			reg.swapQubits(0, target);
-			applyFirst();
-			reg.swapQubits(1, control);
-			reg.swapQubits(0, target);
-		} else
+	public void apply() {
 		if (control == 1 && target == 0) {
 			applyFirst();
-		} else
-		if (control == 0 && target == 1) {
+		} else if (control == 0 && target == 1) {
 			reg.swapQubits(0, 1);
 			applyFirst();
 			reg.swapQubits(0, 1);
-		} else
-		if (control == 1 && target > 1) {
+		} else if (control == 1 && target > 1) {
 			reg.swapQubits(0, target);
 			applyFirst();
 			reg.swapQubits(0, target);
-		} else
-		if (control > 1 && target == 0) {
+		} else if (control > 1 && target == 0) {
 			reg.swapQubits(1, control);
 			applyFirst();
-			reg.swapQubits(1, control);			
-		}
-		
-		/*
-		if (control > 1 && target > 1) {
-			reg.swapQubits(0, control);
+			reg.swapQubits(1, control);
+		} else if (control == 0 && target > 1){
+			reg.swapQubits(0, target);
 			reg.swapQubits(1, target);
-			applyFirst();
-			reg.swapQubits(0, control);
-			reg.swapQubits(1, target);
-		} else
-		if (control == 0 && target == 1) {
-			applyFirst();
-		} else
-		if (control == 1 && target == 0) {
-			reg.swapQubits(0, 1);
 			applyFirst();
 			reg.swapQubits(0, 1);
-		} else
-		if (control == 0 && target > 1) {
 			reg.swapQubits(1, target);
+		} else if (control > 1 && target == 1) {
+			reg.swapQubits(0, 1);
+			reg.swapQubits(1, control);
 			applyFirst();
-			reg.swapQubits(1, target);
-		} else
-		if (control > 1 && target == 1) {
+			reg.swapQubits(0, 1);
 			reg.swapQubits(0, control);
+		} else {
+			reg.swapQubits(1, control);
+			reg.swapQubits(0, target);
 			applyFirst();
-			reg.swapQubits(0, control);			
+			reg.swapQubits(1, control);
+			reg.swapQubits(0, target);
 		}
-		*/
-		
-		
-		/*
-		reg.swapQubits(1, target);       // swap target qubit with first qubit
-		if (control == 0)                // if control is 0, then we just swapped it with target, so control is now target
-			reg.swapQubits(1, target);
-		else
-			reg.swapQubits(1, control);  // swap control qubit with second qubit
-		applyFirst();			         // apply operator to first qubit (which is now the target)
-		reg.swapQubits(0, target);       // swap back target qubit
-		if (control == 0)                // if control was 0, then control is actually target
-			reg.swapQubits(1, target);
-		else
-			reg.swapQubits(1, control);  // swap back control qubit
-		*/
 	}
 
 }

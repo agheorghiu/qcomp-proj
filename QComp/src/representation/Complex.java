@@ -39,6 +39,17 @@ public class Complex {
 	
 	/**
 	 * 
+	 * Creates the complex number i
+	 * 
+	 * @return returns the complex number i
+	 */
+	public static Complex i() {
+		return new Complex(0, 1);
+	}
+
+	
+	/**
+	 * 
 	 * Creates the complex number 0
 	 * 
 	 * @return returns the complex number 0
@@ -70,6 +81,17 @@ public class Complex {
 		imAux = this.im * c.re + this.re * c.im;
 		this.re = reAux;
 		this.im = imAux;
+	}
+	
+	/**
+	 * 
+	 * Scale this complex number with a real factor
+	 * 
+	 * @param factor	real factor for scaling
+	 */
+	public void scale(double factor) {
+		this.re = this.re * factor;
+		this.im = this.im * factor;
 	}
 	
 	/**

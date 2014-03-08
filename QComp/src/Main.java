@@ -1,4 +1,4 @@
-import algorithms.ArraySearch;
+import algorithms.QuantumAdder;
 
 
 /**
@@ -23,23 +23,8 @@ public class Main {
 		dj.run();
 		*/
 
-		/*
-		QuantumAdder adder = new QuantumAdder(2, 2, 3);
+		QuantumAdder adder = new QuantumAdder(5, 5, 4);
 		adder.run();
-		*/
-		/*
-		QRegister reg = new QRegister(2 + (2 << 3));
-		System.out.println(reg);
-		OperatorFactory fact = new OperatorFactory(reg);
-		CNOT c = (CNOT)fact.makeOperator("CNOT");
-		c.setIndices(1, 7);
-		c.apply();
-		
-		c.setIndices(1, 7);
-		c.apply();
-
-		System.out.println(reg);
-		*/
 		
 	}
 }
