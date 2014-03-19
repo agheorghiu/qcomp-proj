@@ -23,9 +23,26 @@ import representation.Triplet;
  */
 public class DeutschJozsa implements Algorithm {
 	
+	/**
+	 * 
+	 * Register on which we operate
+	 * 
+	 */
 	private IRegister reg;
+	
+	/**
+	 * 
+	 * Number of qubits
+	 * 
+	 */
 	private int numQubits;
 	
+	/**
+	 * 
+	 * Constructor
+	 * 
+	 * @param numQubits	number of qubits
+	 */
 	public DeutschJozsa(int numQubits) {
 		this.reg = new QRegister(1);
 		this.numQubits = numQubits;
