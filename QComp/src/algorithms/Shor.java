@@ -81,7 +81,9 @@ public class Shor implements Algorithm {
 			return;
 		}
 		// if n is not prime, factor it
-		int fact = factor(n);
+		int fact = 1;
+		while (fact == 1)
+			fact = factor(n);
 		System.out.println(fact + " " + n / fact);
 	}
 

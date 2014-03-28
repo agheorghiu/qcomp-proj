@@ -55,20 +55,28 @@ public class DeutschJozsa implements Algorithm {
 		Projector p = new Projector(reg);
 		NQOperator function = (NQOperator)getRandomOperator();
 		
+		System.out.println("Initial register state \n" + reg);
+		
 		// apply H to all qubits
 		for (int i = 0; i <= numQubits; i++) {
 			h.setIndex(i);
 			h.apply();
 		}
 		
+		System.out.println("Superposition \n" + reg);
+		
 		// apply the function operator
 		function.apply();
+		
+		System.out.println("Applied function \n" + reg);
 		
 		// apply H to qubits 1 through n
 		for (int i = 1; i <= numQubits; i++) {
 			h.setIndex(i);
 			h.apply();
 		}
+		
+		System.out.println("Final state \n" + reg);
 		
 		// measure all n qubits
 		for (int i = 1; i <= numQubits; i++) {
