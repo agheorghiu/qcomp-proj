@@ -9,6 +9,15 @@ import representation.*;
 
 public class RegisterComparison {
     
+    /**
+     * 
+     * Method to fill random nS states of the register to equal probabilities
+     * 
+     * @param nQ number of qubits
+     * @param nS number of states
+     * @param a ARegister register implementation
+     * @param h QRegister register implementation
+     */
     private static void fill(int nQ, int nS, ARegister a, QRegister h){
         
         a.nullifyStates(a.getOneStates(0));
@@ -39,11 +48,11 @@ public class RegisterComparison {
     
     public static void main(String[] args) {
         
-        int mQ = 32;
-        int maxS = 10;        
+        int mQ = 32; //maximum number of qubits to be used
+        int maxS = 10; //maximum states to be used        
                
-        int forms = 50;
-        int reps = 20;
+        int forms = 50; //how many random forms of register are to be used
+        int reps = 20; //how many times each form is to be tested
         
         long times[][][][] = new long[mQ][maxS+1][2][2];
         
@@ -52,6 +61,7 @@ public class RegisterComparison {
         
         for(int nQ=1; nQ<=mQ; nQ++){     
             
+            //set up graphs
             Plot t = new Plot();
             t.setTitle("Plot of processing times for "+(nQ)+" qubits");
             t.setXLabel("Number of non-zero states");
@@ -62,6 +72,7 @@ public class RegisterComparison {
             Mem.setXLabel("Number of non-zero states");
             Mem.setYLabel("Additional memory in use");
             
+            //initial memry usage
             long baseline = runtime.totalMemory();
         
             ARegister a = new ARegister(nQ);
@@ -74,11 +85,17 @@ public class RegisterComparison {
             for(int nS=0; nS<=mS; nS++){
                 
                 for (int i=0; i<forms; i++){
+                    
+                    //fill the master registers to be cloned for each repetition
                     fill(nQ, nS, a, h);
+                    
                     for (int j=0; j<reps; j++){
+                        
+                        //clone registers
                         ARegister A = (ARegister)a.clone();
                         QRegister H = (QRegister)h.clone();
 
+                        //make operators
                         OperatorFactory fa = new OperatorFactory(A);
                         Hadamard ah = (Hadamard)fa.makeOperator("Hadamard");
                         ah.setIndex(nQ-1);
@@ -87,6 +104,8 @@ public class RegisterComparison {
                         Hadamard hh = (Hadamard)fh.makeOperator("Hadamard");
                         hh.setIndex(nQ-1);
 
+                        //apply gates and measure times
+                        //times are scaled to when added it gives the average time without having to calculate it afterwards                           
                         long start = System.nanoTime();
                         ah.apply();
                         long finish = System.nanoTime();
@@ -97,11 +116,14 @@ public class RegisterComparison {
                         finish = System.nanoTime();
                         times[nQ-1][nS][0][1] = times[nQ-1][nS][0][1] + (finish-start);
                         
+                        //CNOT Gate
                         if (nQ>1){
-                            A = (ARegister)a.clone();
+                            //clone registers
+                            A = (ARegister)a.clone(); 
                             H = (QRegister)h.clone();
 
-                            fa = new OperatorFactory(A);
+                            //make operators
+                            fa = new OperatorFactory(A); 
                             CNOT ac = (CNOT)fa.makeOperator("CNOT");
                             ac.setIndices(nQ-1, nQ-2);
 
@@ -109,6 +131,8 @@ public class RegisterComparison {
                             CNOT hc = (CNOT)fh.makeOperator("CNOT");
                             hc.setIndices(nQ-1, nQ-2);
 
+                            //apply gates and measure times
+                            //times are scaled to when added it gives the average time without having to calculate it afterwards
                             start = System.nanoTime();
                             ac.apply();
                             finish = System.nanoTime();
@@ -125,6 +149,7 @@ public class RegisterComparison {
                 
                 mem[nQ-1][nS] = runtime.totalMemory()-baseline;
                 
+                //add points to graph
                 t.addPoint(0, nS, times[nQ-1][nS][0][0], true);
                 t.addPoint(1, nS, times[nQ-1][nS][0][1], true);
                 t.addPoint(2, nS, times[nQ-1][nS][1][0], true);
@@ -134,6 +159,7 @@ public class RegisterComparison {
                 
             }//finish loop over states  
             
+            //finish graphs
             t.addLegend(0, "Hadamard- Array");
             t.addLegend(1, "Hadamard- Hashmap");
             t.addLegend(2, "CNOT- Array");

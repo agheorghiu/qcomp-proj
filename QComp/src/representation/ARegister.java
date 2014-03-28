@@ -45,7 +45,7 @@ public class ARegister extends IRegister {
 		
 	/**
 	 * 
-	 * Constuctor for array-based register
+	 * Constructor for array-based register
 	 * 
 	 * @param numQubits	number of qubits
 	 * @param state	state on which it's operating
@@ -80,7 +80,7 @@ public class ARegister extends IRegister {
 	@Override
 	public Set<Integer> getStates() {
 		Set<Integer> set = new HashSet<Integer>();
-		for (int i = 0; i < numQubits; i++)
+		for (int i = 0; i < reg.length; i++)
 			if (!reg[i].equals(Complex.zero()))
 				set.add(i);
 		return set;
