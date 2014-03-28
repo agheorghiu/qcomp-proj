@@ -1,160 +1,153 @@
-
+import gates.CNOT;
+import gates.Hadamard;
 import java.util.Random;
-
+import operators.Operator;
+import operators.OperatorFactory;
+import ptolemy.plot.Plot;
+import ptolemy.plot.PlotFrame;
 import representation.*;
-import operators.*;
-import gates.*;
 
-/**
- *
- * @author Andru, Charlie, Sam
- */
 public class RegisterComparison {
-
-    /**
-     * 
-     * Method which takes in a ARegister object and a QRegister object using nQubits qubits and fills them in a given way.
-     * Once filled, they can be cloned and kept as master copies while the clones are used to test the running time of different gates on the different registers.
-     * 
-     * @param nQubits number of qubits being worked with. Should be the same number of qubits that the areg was initialsed with.
-     * @param density the fraction of the total number of possible states to be filled
-     * @param areg the ARegister object
-     * @param hreg the QRegister object
-     * @param type how the registers are to be filled- 0: first nStates*density states will be filled; 1: nStates*density regularily spaced states will be filled; 2: nStates*density random states will be filled
-     */
-    private static void fillMasterRegs(int nQubits, double density, IRegister areg, IRegister hreg){
+    
+    private static void fill(int nQ, int nS, ARegister a, QRegister h){
         
-        areg.nullifyStates(areg.getOneStates(0));
-        areg.nullifyStates(areg.getZeroStates(0));
+        a.nullifyStates(a.getOneStates(0));
+        a.nullifyStates(a.getZeroStates(0));
                         
-        hreg.nullifyStates(hreg.getOneStates(0));
-        hreg.nullifyStates(hreg.getZeroStates(0));
-                        
-        int nStates = 1 << nQubits;
-        int fill = (int)((double)(nStates)*density);
+        h.nullifyStates(h.getOneStates(0));
+        h.nullifyStates(h.getZeroStates(0));
         
-        boolean alreadyPicked[] = new boolean[nStates];
-                    
+        int maxStates = 1<<nQ;
+        boolean picked[] = new boolean[maxStates];
+        
         Random rand = new Random();
-        
-        for (int i=0; i<fill; i++){
+        for (int i=1; i<=nS; i++){
             int place = 0;
-            do
-                place = rand.nextInt(nStates);                    
-            while (alreadyPicked[place]);
-            alreadyPicked[place] = true;
-            areg.setState(place, Complex.one()); 
-            hreg.setState(place, Complex.one());
+            
+            do{
+               place = rand.nextInt(maxStates);
+            }while (picked[place]);
+            
+            picked[place] = true;
+            a.setState(place, Complex.one());
+            h.setState(place, Complex.one());
         }
-        hreg.normalise();       
-        areg.normalise();
         
-                            
+        a.normalise();
+        h.normalise();
     }
     
-   
-    public static void main(String[] args) {        
-         
-        int maxQ = 10;
-        int numRandForms = 100;
-        int rep = 20;
+    public static void main(String[] args) {
         
-        long times[][][][][] = new long [2][maxQ][100][numRandForms][rep];
+        int mQ = 32;
+        int maxS = 10;        
+               
+        int forms = 50;
+        int reps = 20;
         
-        for (int nQ = 1; nQ <= maxQ; nQ++){
+        long times[][][][] = new long[mQ][maxS+1][2][2];
+        
+        Runtime runtime = Runtime.getRuntime();
+        long mem[][] = new long[mQ][maxS+1];
+        
+        for(int nQ=1; nQ<=mQ; nQ++){     
             
-            for (int d = 1; d <= 100; d++){
-                
-                for (int j = 0; j < numRandForms; j++){
-                
-                    ARegister areg = new ARegister(nQ);
-                    QRegister hreg = new QRegister();
-
-                    fillMasterRegs(nQ, (0.01*(double)d), areg, hreg);
-
-                    for (int i = 0; i < rep; i++){
-
-                        ARegister A = (ARegister)(areg.clone());                    
-                        OperatorFactory factA = new OperatorFactory(A);
-                        Hadamard hA = (Hadamard)factA.makeOperator("Hadamard");
-                        hA.setIndex(nQ-1);
-                    
-                        QRegister H = (QRegister)(hreg.clone());                    
-                        OperatorFactory factH = new OperatorFactory(H);
-                        Hadamard hH = (Hadamard)factH.makeOperator("Hadamard");
-                        hH.setIndex(nQ-1);
-                        
-                        long aStart = System.nanoTime();
-                        hA.apply();
-                        long aFinish = System.nanoTime();
-                        
-                        long hStart = System.nanoTime();
-                        hH.apply();
-                        long hFinish = System.nanoTime();
-                        
-                        times[0][nQ-1][d-1][j][i] = aFinish-aStart; //time taken by array
-                        times[1][nQ-1][d-1][j][i] = hFinish-hStart; //time taken by hash-map
-                        
-                    }
-                }
-            }
-        } //finish looping over number of qubits
+            Plot t = new Plot();
+            t.setTitle("Plot of processing times for "+(nQ)+" qubits");
+            t.setXLabel("Number of non-zero states");
+            t.setYLabel("Processing time (ns)");
+            
+            Plot Mem = new Plot();
+            Mem.setTitle("Plot of additional memory in used for "+(nQ)+" qubits");
+            Mem.setXLabel("Number of non-zero states");
+            Mem.setYLabel("Additional memory in use");
+            
+            long baseline = runtime.totalMemory();
         
-        double AvTime [][][] = new double [2][maxQ][100];
-        
-        for (int type = 0; type <= 1; type++){
-            for (int nQ = 1; nQ <= maxQ; nQ++){
-                for (int d = 1; d <= 100; d++){
-                    
-                    long tTotal = 0;
-                    for (int i=0; i<numRandForms; i++){
-                        for (int j=0; j<rep; j++){
-                            tTotal = tTotal + times[type][nQ-1][d-1][i][j];
+            ARegister a = new ARegister(nQ);
+            QRegister h = new QRegister();
+
+            int mS = 1 <<nQ;
+            if (mS>maxS)
+                mS = maxS;
+
+            for(int nS=0; nS<=mS; nS++){
+                
+                for (int i=0; i<forms; i++){
+                    fill(nQ, nS, a, h);
+                    for (int j=0; j<reps; j++){
+                        ARegister A = (ARegister)a.clone();
+                        QRegister H = (QRegister)h.clone();
+
+                        OperatorFactory fa = new OperatorFactory(A);
+                        Hadamard ah = (Hadamard)fa.makeOperator("Hadamard");
+                        ah.setIndex(nQ-1);
+
+                        OperatorFactory fh = new OperatorFactory(H);
+                        Hadamard hh = (Hadamard)fh.makeOperator("Hadamard");
+                        hh.setIndex(nQ-1);
+
+                        long start = System.nanoTime();
+                        ah.apply();
+                        long finish = System.nanoTime();
+                        times[nQ-1][nS][0][0] = times[nQ-1][nS][0][0] + ((finish-start)/(forms*reps));
+
+                        start = System.nanoTime();
+                        hh.apply();
+                        finish = System.nanoTime();
+                        times[nQ-1][nS][0][1] = times[nQ-1][nS][0][1] + (finish-start);
+                        
+                        if (nQ>1){
+                            A = (ARegister)a.clone();
+                            H = (QRegister)h.clone();
+
+                            fa = new OperatorFactory(A);
+                            CNOT ac = (CNOT)fa.makeOperator("CNOT");
+                            ac.setIndices(nQ-1, nQ-2);
+
+                            fh = new OperatorFactory(H);
+                            CNOT hc = (CNOT)fh.makeOperator("CNOT");
+                            hc.setIndices(nQ-1, nQ-2);
+
+                            start = System.nanoTime();
+                            ac.apply();
+                            finish = System.nanoTime();
+                            times[nQ-1][nS][1][0] = times[nQ-1][nS][1][0] + ((finish-start)/(forms*reps));
+
+                            start = System.nanoTime();
+                            hc.apply();
+                            finish = System.nanoTime();
+                            times[nQ-1][nS][1][1] = times[nQ-1][nS][1][1] + (finish-start);
                         }
-                    }
-                    
-                    AvTime[type][nQ-1][d-1] = (double)tTotal/(numRandForms*rep);
-                    
-                }
-            }
-        }//finish calculating average times        
-        
-        /*     
-        for (int i=0; i<maxQ; i++){
+                            
+                    }//finish loop over repeats
+                }//finish loop over forms
+                
+                mem[nQ-1][nS] = runtime.totalMemory()-baseline;
+                
+                t.addPoint(0, nS, times[nQ-1][nS][0][0], true);
+                t.addPoint(1, nS, times[nQ-1][nS][0][1], true);
+                t.addPoint(2, nS, times[nQ-1][nS][1][0], true);
+                t.addPoint(3, nS, times[nQ-1][nS][1][1], true);
+                                
+                Mem.addPoint(0, nS, mem[nQ-1][nS], true);
+                
+            }//finish loop over states  
             
-            Plot plot = new Plot();
-            plot.setTitle("Plot of Hadamard processing time for "+(i+1)+" qubits");
-            plot.setXLabel("Density of non-zero states");
-            plot.setYLabel("Processing time (ns)");
+            t.addLegend(0, "Hadamard- Array");
+            t.addLegend(1, "Hadamard- Hashmap");
+            t.addLegend(2, "CNOT- Array");
+            t.addLegend(3, "CNOT- Hashmap");
             
-            for (int j=0; j<100; j++){
-                plot.addPoint(0, 0.01*(double)j, AvTime[0][i][j], true); 
-                plot.addPoint(1, 0.01*(double)j, AvTime[1][i][j], true);
-            }
+            PlotFrame ft = new PlotFrame("Comparison", t);
+            ft.setSize(800, 600);
+            ft.setVisible(true);
             
-            plot.addLegend(0, "Array implementation");
-            plot.addLegend(1, "Hash-map implementation");
-            
-            PlotFrame frame = new PlotFrame("Comparison of Hash-map and Array implementations", plot);
-            frame.setSize(800, 600);
-            frame.setVisible(true);
-        }
-        
-        Plot Switch = new Plot();
-        Switch.setTitle("Plot of the percentage of non-zero states for which the Array Implementation becomes more efficient");
-        Switch.setXLabel("Number of Qubits");
-        Switch.setYLabel("Percentage");
-        
-        */
-        
-        for (int i=0; i<maxQ; i++){
-            System.out.println("\n\n ............... \n\n"+(i+1)+" Qubits:\n\n");
-            System.out.println("\n ------Array Implementation------\n");
-            for (int k=0; k<100; k++)
-                System.out.println(AvTime[0][i][k]);
-            System.out.println("\n ------Hash-map Implementation------\n");               
-            for (int k=0; k<100; k++)
-                System.out.println(AvTime[1][i][k]);
-        }
+            PlotFrame fm = new PlotFrame("Memory Usage", Mem);
+            fm.setSize(800, 600);
+            fm.setVisible(true);
+                        
+        }//finish loop over qubits       
+                
     }
 }
