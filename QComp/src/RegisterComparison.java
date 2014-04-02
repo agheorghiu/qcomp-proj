@@ -8,6 +8,14 @@ import ptolemy.plot.Plot;
 import ptolemy.plot.PlotFrame;
 import representation.*;
 
+/**
+ * 
+ * Class to compare the running times of the Hashmap and Array implementations of the register when operators are applied.
+ * 
+ * @author Andru, Charlie, Sam
+ * 
+ */
+
 public class RegisterComparison {
     
     /**
