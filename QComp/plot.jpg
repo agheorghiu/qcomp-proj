@@ -1,0 +1,39 @@
+<?xml version="1.0" standalone="yes"?>
+<!DOCTYPE plot PUBLIC "-//UC Berkeley//DTD PlotML 1//EN"
+    "http://ptolemy.eecs.berkeley.edu/xml/dtd/PlotML_1.dtd">
+<plot>
+<!-- Ptolemy plot, version 5.8 , PlotML format. -->
+<title>Plot of processing times for 1 qubits</title>
+<xLabel>Number of non-zero states</xLabel>
+<yLabel>Processing time (ns)</yLabel>
+<dataset name="Hadamard- Array">
+<m x="0.0" y="16337.0"/>
+<p x="1.0" y="24298.0"/>
+<p x="2.0" y="49011.0"/>
+</dataset>
+<dataset name="Hadamard- Hashmap">
+<m x="0.0" y="14024.0"/>
+<p x="1.0" y="30223.0"/>
+<p x="2.0" y="17636.0"/>
+</dataset>
+<dataset name="CNOT- Array">
+<m x="0.0" y="0.0"/>
+<p x="1.0" y="0.0"/>
+<p x="2.0" y="0.0"/>
+</dataset>
+<dataset name="CNOT- Hashmap">
+<m x="0.0" y="0.0"/>
+<p x="1.0" y="0.0"/>
+<p x="2.0" y="0.0"/>
+</dataset>
+<dataset name="Projector- Array">
+<m x="0.0" y="0.0"/>
+<p x="1.0" y="0.0"/>
+<p x="2.0" y="0.0"/>
+</dataset>
+<dataset name="Projector- Hashmap">
+<m x="0.0" y="32114.0"/>
+<p x="1.0" y="31347.0"/>
+<p x="2.0" y="33621.0"/>
+</dataset>
+</plot>

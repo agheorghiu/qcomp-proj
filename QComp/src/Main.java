@@ -17,20 +17,20 @@ public class Main {
 		search.run();
 		*/
 
-		
+		/*
 		DeutschJozsa dj = new DeutschJozsa(5);
 		dj.run();
-		
+		*/
 
 		/*
 		QuantumAdder adder = new QuantumAdder(5, 5, 4);
 		adder.run();
 		*/
 		
-		/*
+		
 		Shor sh = new Shor(21);
 		sh.run();
-		*/
+		
 
 	}
 }
