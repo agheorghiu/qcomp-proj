@@ -86,11 +86,6 @@ public class SQOperator extends Operator {
 					changeEven(state - 1);
 	}
 
-	/**
-	 * 
-	 * Applies this operator to the register
-	 * 
-	 */
 	@Override
 	public void apply() {
 		reg.swapQubits(0, index); // swap target qubit with first qubit

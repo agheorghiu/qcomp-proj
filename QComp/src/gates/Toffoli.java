@@ -14,11 +14,12 @@ import representation.Triplet;
  *
  */
 public class Toffoli extends NQOperator {
+
 	/**
 	 * 
-	 * Constructor for Toffoli
+	 * Constructor which initialises matrix representation
 	 * 
-	 * @param reg	register on which this gate operates
+	 * @param reg	register on which we operate
 	 */
 	public Toffoli(IRegister reg) {
 		super(reg, new ArrayList<Triplet<String, Integer, Integer>>());

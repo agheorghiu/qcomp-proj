@@ -18,6 +18,12 @@ public abstract class Operator {
 	 */
 	protected IRegister reg;
 	
+	/**
+	 * 
+	 * Constructor
+	 * 
+	 * @param reg	register on which we operate
+	 */
 	public Operator(IRegister reg) {
 		this.reg = reg;
 	}

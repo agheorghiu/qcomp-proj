@@ -25,8 +25,8 @@ public class TQOperator extends Operator {
 	 * 
 	 * Constructor which receives matrix representation
 	 * 
-	 * @param opElems
-	 *            the matrix representation
+	 * @param opElems the matrix representation
+	 * 
 	 */
 	public TQOperator(IRegister reg, Complex[][] opElems) {
 		super(reg);
@@ -35,8 +35,9 @@ public class TQOperator extends Operator {
 
 	/**
 	 * 
-	 * Default constructor (identity matrix)
+	 * Constructor which initialises matrix representation to unit matrix
 	 * 
+	 * @param reg	register on which we operate
 	 */
 	public TQOperator(IRegister reg) {
 		super(reg);
@@ -109,11 +110,6 @@ public class TQOperator extends Operator {
 			}
 	}
 
-	/**
-	 * 
-	 * Applies this operator to the register
-	 * 
-	 */
 	@Override
 	public void apply() {
 		if (control == 1 && target == 0) {

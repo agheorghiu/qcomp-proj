@@ -176,6 +176,13 @@ public class Complex {
 		}
 	}
 
+	/**
+	 * 
+	 * Tests for equality with other complex number
+	 * 
+	 * @param c	complex number to compare with
+	 * @return	true or false depending on whether this complex number is equal to c
+	 */
 	public boolean equals(Complex c){
 		if (this.re == c.re && this.im == c.im)
 			return true;

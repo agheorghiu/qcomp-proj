@@ -14,8 +14,9 @@ public class PauliZ extends SQOperator {
 	
 	/**
 	 * 
-	 * Default constructor initialises matrix representation
+	 * Constructor which initialises matrix representation
 	 * 
+	 * @param reg	register on which we operate
 	 */
 	public PauliZ(IRegister reg) {
 		super(reg);

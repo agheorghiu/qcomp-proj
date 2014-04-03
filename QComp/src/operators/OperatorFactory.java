@@ -32,7 +32,6 @@ public class OperatorFactory {
 	
 	/**
 	 * 
-	 * Really awesome method
 	 * Method which uses reflection to obtain a specific gate (object) given the name
 	 * of the gate
 	 * 

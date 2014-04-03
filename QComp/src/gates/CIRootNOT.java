@@ -15,8 +15,9 @@ public class CIRootNOT extends TQOperator {
 
 	/**
 	 * 
-	 * Default constructor initialises matrix representation
+	 * Constructor which initialises matrix representation
 	 * 
+	 * @param reg	register on which we operate
 	 */
 	public CIRootNOT(IRegister reg) {
 		super(reg);

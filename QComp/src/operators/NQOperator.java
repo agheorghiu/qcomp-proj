@@ -55,11 +55,6 @@ public class NQOperator extends Operator {
 		this.triplets = new ArrayList<Triplet<String, Integer, Integer>>();
 	}
 
-	/**
-	 * 
-	 * Apply method
-	 * 
-	 */
 	@Override
 	public void apply() {
 		for (Triplet<String, Integer, Integer> triplet : triplets) {

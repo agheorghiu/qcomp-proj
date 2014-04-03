@@ -114,6 +114,7 @@ public class DeutschJozsa implements Algorithm {
 	 * Returns the balanced operator
 	 * 
 	 * @return	returns the balanced operator
+	 * 
 	 */
 	private Operator balancedOperator() {
 		ArrayList<Triplet<String, Integer, Integer>> triplets =

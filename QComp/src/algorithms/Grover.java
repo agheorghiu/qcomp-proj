@@ -126,11 +126,6 @@ public class Grover implements Algorithm {
 		return computedOmega;
 	}
 
-	/**
-	 * 
-	 * Runs the algorithm
-	 * 
-	 */
 	@Override
 	public void run() {
 		int index = 0, computedOmega = -1;

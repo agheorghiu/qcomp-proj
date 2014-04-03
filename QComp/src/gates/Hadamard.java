@@ -14,8 +14,9 @@ public class Hadamard extends SQOperator {
 	
 	/**
 	 * 
-	 * Default constructor initialises matrix representation
+	 * Constructor which initialises matrix representation
 	 * 
+	 * @param reg	register on which we operate
 	 */
 	public Hadamard(IRegister reg) {
 		super(reg);

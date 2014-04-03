@@ -44,11 +44,6 @@ public class Deutsch implements Algorithm {
 		factory = new OperatorFactory(reg);
 	}
 
-	/**
-	 * 
-	 * Method for running the algorithm
-	 * 
-	 */
 	@Override
 	public void run() {
 		Hadamard h = (Hadamard)factory.makeOperator("Hadamard");

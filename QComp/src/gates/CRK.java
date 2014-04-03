@@ -16,8 +16,9 @@ public class CRK extends TQOperator {
 
 	/**
 	 * 
-	 * Default constructor initialises matrix representation as unit matrix
+	 * Constructor which initialises matrix representation
 	 * 
+	 * @param reg	register on which we operate
 	 */
 	public CRK(IRegister reg) {
 		super(reg);

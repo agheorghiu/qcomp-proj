@@ -22,8 +22,8 @@ public class ARegister extends IRegister {
 	 * 
 	 * Initialises to state 0 (|000...0>) with amplitude 1
 	 * 
-	 * @param numQubits
-	 *            Number of qubits in the register
+	 * @param numQubits number of qubits in the register
+	 * 
 	 */
 	public ARegister(int numQ) {
 		numQubits = numQ;

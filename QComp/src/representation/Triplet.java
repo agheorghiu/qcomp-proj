@@ -2,7 +2,7 @@ package representation;
 
 /**
  * 
- * Class which defines a triplet (a grouping of 3 objects(
+ * Class which defines a triplet (a grouping of 3 objects)
  * 
  * @author Andru, Charlie, Sam
  *

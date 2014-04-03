@@ -55,6 +55,12 @@ public class RegisterComparison {
         h.normalise();
     }
     
+    /**
+     * 
+     * Test method
+     * 
+     * @param args
+     */
     public static void main(String[] args) {
         
         int mQ = 15; //maximum number of qubits to be used

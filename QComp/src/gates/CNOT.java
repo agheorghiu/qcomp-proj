@@ -15,8 +15,9 @@ public class CNOT extends TQOperator {
 	
 	/**
 	 * 
-	 * Default constructor initialises matrix representation
+	 * Constructor which initialises matrix representation
 	 * 
+	 * @param reg	register on which we operate
 	 */
 	public CNOT(IRegister reg) {
 		super(reg);

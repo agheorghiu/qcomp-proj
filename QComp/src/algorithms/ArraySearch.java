@@ -57,11 +57,7 @@ public class ArraySearch extends Grover implements Algorithm {
 		this.element = element;
 	}
 	
-	/**
-	 * 
-	 * Runs the algorithm
-	 * 
-	 */
+	@Override
 	public void run() {
 		int run = 0, computedIndex = -1;
 		while ((computedIndex < 0 || !test(computedIndex)) && run < maxRuns) {

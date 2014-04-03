@@ -14,8 +14,9 @@ public class PauliY extends SQOperator {
 	
 	/**
 	 * 
-	 * Default constructor initialises matrix representation
+	 * Constructor which initialises matrix representation
 	 * 
+	 * @param reg	register on which we operate
 	 */
 	public PauliY(IRegister reg) {
 		super(reg);
